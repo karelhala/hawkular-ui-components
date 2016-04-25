@@ -10,7 +10,7 @@ if [ "${TRAVIS_BRANCH}" = "master" ] && [ ${GH_TOKEN} ]; then
         rm -rf "../${GH_BRANCH}/${TRAVIS_PULL_REQUEST}"
         mkdir "../${GH_BRANCH}/${TRAVIS_PULL_REQUEST}"
 
-        # copy dist/ folder to gh-pages folder and chenge to it
+        # copy dist/ folder to gh-pages folder and change to it
         cp ./dist/* "../${GH_BRANCH}/${TRAVIS_PULL_REQUEST}/" -rf 2>/dev/null || :
         cd "../${GH_BRANCH}"
 
@@ -20,10 +20,7 @@ if [ "${TRAVIS_BRANCH}" = "master" ] && [ ${GH_TOKEN} ]; then
         git config user.email "<your@email.com>"
         git commit -m "Deploy to GitHub Pages"
 
-        # Force push from the current repo's master branch to the remote
-        # repo's gh-pages branch. (All previous history on the gh-pages branch
-        # will be lost, since we are overwriting it.) We redirect any output to
-        # /dev/null to hide any sensitive credential data that might otherwise be exposed.
-        # tokens GH_TOKEN and GH_REF will be provided as Travis CI environment variables
-        git push --force --quiet "https://${GH_TOKEN}@${GH_REF}.git"
+        export CURRENT_BRANCH=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/');
+        # push to GH_BRANCH in a way where we can't push to some different page
+        git push --quiet "https://${GH_TOKEN}@${GH_REF}.git" ${CURRENT_BRANCH}:${GH_BRANCH}
 fi

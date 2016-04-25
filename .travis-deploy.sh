@@ -15,5 +15,7 @@ if [ "$TRAVIS_BRANCH" = "master" ] && [ $TRAVIS_PULL_REQUEST = "false" ]; then
         git config user.email "<your@email.com>"
         git commit -m "Deploy to GitHub Pages"
 
-        git push --force --quiet "https://${GH_TOKEN}@${GH_REF}.git"
+        export CURRENT_BRANCH=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/');
+        # push to GH_BRANCH in a way where we can't push to some different page
+        git push --quiet "https://${GH_TOKEN}@${GH_REF}.git" ${CURRENT_BRANCH}:${GH_BRANCH}
 fi

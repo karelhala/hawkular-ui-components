@@ -8,6 +8,8 @@ npm:
 
 env:
   global:
+  # miq-ui-components-bot secure string for pushing to gh-pages after travis merge
+  - secure: "mQ4nKptWxfVnoGMFv2y7Ba0OyZCZRDLt/49aPCTVnDg8YDDq/BbQcWcLhXmZf5Syf71IGpAOoz94SwdAe2J1uZKlC0Igcthl0iqJwkkI115je9rWMYWpGn0mhXtklscY/glWXNuCr23JGWlqDNWp+/ChcC7lg4T/egHjN/lKQtY="
   - GH_REF: github.com/hawkular/hawkular-ui-components
   - GH_BRANCH: gh-pages
 
@@ -27,4 +29,12 @@ cache:
 before_install:
   - 'npm install -g typings bower webpack'
 
-script: ./build.sh
+script:
+ - ./build.sh
+
+after_success:
+ - if [[ "${TRAVIS_BRANCH}" = "master" ]] && [[ "${TRAVIS_PULL_REQUEST}" = "false" ]];
+  then
+    echo "Push to gh-pages branch, we are mergin pull request"
+    ./.travis-deploy.sh;
+  fi
