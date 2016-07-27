@@ -13,7 +13,7 @@ pids
 
 dist/data/
 dist/assets/
-dist/assets/
+dist/docs/
 dist/**/demo-app.*
 .tmp/
 .bower/
